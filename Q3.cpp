@@ -9,3 +9,4 @@ for (i = 0; i < 5; i++)
   cout<<arr[i];
 return 0; 
 }
+// answer will be 1 0 0 0 0
