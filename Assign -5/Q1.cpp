@@ -3,99 +3,115 @@ using namespace std;
 
 class Node {
 public:
-    int data;
+    int val;
     Node* next;
-    Node(int val) { data = val; next = NULL; }
+    Node(int x) : val(x), next(nullptr) {}
 };
 
-class LinkedList {
+class List {
     Node* head;
 public:
-    LinkedList() { head = NULL; }
-    void insertBeg(int val) {
-        Node* n = new Node(val);
+    List() : head(nullptr) {}
+
+    void insertFront(int x) {
+        Node* n = new Node(x);
         n->next = head;
         head = n;
     }
-    void insertEnd(int val) {
-        Node* n = new Node(val);
+
+    void insertBack(int x) {
+        Node* n = new Node(x);
         if (!head) { head = n; return; }
-        Node* temp = head;
-        while (temp->next) temp = temp->next;
-        temp->next = n;
+        Node* walk = head;
+        while (walk->next) walk = walk->next;
+        walk->next = n;
     }
-    void insertAfter(int key, int val) {
-        Node* temp = head;
-        while (temp && temp->data != key) temp = temp->next;
-        if (!temp) return;
-        Node* n = new Node(val);
-        n->next = temp->next;
-        temp->next = n;
+
+    void insertAfter(int key, int x) {
+        Node* walk = head;
+        while (walk && walk->val != key) walk = walk->next;
+        if (!walk) return;
+        Node* n = new Node(x);
+        n->next = walk->next;
+        walk->next = n;
     }
-    void insertBefore(int key, int val) {
+
+    void insertBefore(int key, int x) {
         if (!head) return;
-        if (head->data == key) { insertBeg(val); return; }
-        Node* temp = head;
-        while (temp->next && temp->next->data != key) temp = temp->next;
-        if (!temp->next) return;
-        Node* n = new Node(val);
-        n->next = temp->next;
-        temp->next = n;
+        if (head->val == key) { insertFront(x); return; }
+        Node* walk = head;
+        while (walk->next && walk->next->val != key) walk = walk->next;
+        if (!walk->next) return;
+        Node* n = new Node(x);
+        n->next = walk->next;
+        walk->next = n;
     }
-    void deleteBeg() {
+
+    void deleteFront() {
         if (!head) return;
-        Node* t = head;
+        Node* temp = head;
         head = head->next;
-        delete t;
+        delete temp;
     }
-    void deleteEnd() {
+
+    void deleteBack() {
         if (!head) return;
-        if (!head->next) { delete head; head = NULL; return; }
-        Node* temp = head;
-        while (temp->next->next) temp = temp->next;
-        delete temp->next;
-        temp->next = NULL;
+        if (!head->next) { delete head; head = nullptr; return; }
+        Node* walk = head;
+        while (walk->next->next) walk = walk->next;
+        delete walk->next;
+        walk->next = nullptr;
     }
-    void deleteNode(int key) {
+
+    void deleteValue(int key) {
         if (!head) return;
-        if (head->data == key) { deleteBeg(); return; }
-        Node* temp = head;
-        while (temp->next && temp->next->data != key) temp = temp->next;
-        if (!temp->next) return;
-        Node* t = temp->next;
-        temp->next = temp->next->next;
-        delete t;
+        if (head->val == key) { deleteFront(); return; }
+        Node* walk = head;
+        while (walk->next && walk->next->val != key) walk = walk->next;
+        if (!walk->next) return;
+        Node* temp = walk->next;
+        walk->next = temp->next;
+        delete temp;
     }
-    void search(int key) {
-        Node* temp = head;
+
+    void search(int key) const {
+        Node* walk = head;
         int pos = 1;
-        while (temp) {
-            if (temp->data == key) { cout << "Found at position " << pos << endl; return; }
-            temp = temp->next; pos++;
+        while (walk) {
+            if (walk->val == key) {
+                cout << "Found at position " << pos << "\n";
+                return;
+            }
+            walk = walk->next;
+            pos++;
         }
-        cout << "Not Found" << endl;
+        cout << "Not Found\n";
     }
-    void display() {
-        Node* temp = head;
-        while (temp) { cout << temp->data << " "; temp = temp->next; }
-        cout << endl;
+
+    void show() const {
+        Node* walk = head;
+        while (walk) {
+            cout << walk->val << " ";
+            walk = walk->next;
+        }
+        cout << "\n";
     }
 };
 
 int main() {
-    LinkedList l;
-    int choice, val, key;
+    List lst;
+    int choice, x, key;
     while (true) {
         cin >> choice;
-        if (choice == 1) { cin >> val; l.insertBeg(val); }
-        else if (choice == 2) { cin >> val; l.insertEnd(val); }
-        else if (choice == 3) { cin >> key >> val; l.insertAfter(key, val); }
-        else if (choice == 4) { cin >> key >> val; l.insertBefore(key, val); }
-        else if (choice == 5) l.deleteBeg();
-        else if (choice == 6) l.deleteEnd();
-        else if (choice == 7) { cin >> key; l.deleteNode(key); }
-        else if (choice == 8) { cin >> key; l.search(key); }
-        else if (choice == 9) l.display();
+        if (choice == 1) { cin >> x; lst.insertFront(x); }
+        else if (choice == 2) { cin >> x; lst.insertBack(x); }
+        else if (choice == 3) { cin >> key >> x; lst.insertAfter(key, x); }
+        else if (choice == 4) { cin >> key >> x; lst.insertBefore(key, x); }
+        else if (choice == 5) lst.deleteFront();
+        else if (choice == 6) lst.deleteBack();
+        else if (choice == 7) { cin >> key; lst.deleteValue(key); }
+        else if (choice == 8) { cin >> key; lst.search(key); }
+        else if (choice == 9) lst.show();
         else break;
     }
 }
